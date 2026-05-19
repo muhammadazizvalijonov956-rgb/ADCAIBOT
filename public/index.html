@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADC Admin Panel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div id="login-container" class="login-page">
+        <div class="login-card">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <h1>ADC Admin</h1>
+            </div>
+            <p>Please enter your administrator password</p>
+            <input type="password" id="admin-password" placeholder="Password">
+            <button onclick="login()">Login</button>
+            <p id="login-error" class="error-text" style="display:none"></p>
+        </div>
+    </div>
+
+    <div id="admin-container" style="display:none">
+        <header>
+            <div class="header-left">
+                <i class="fas fa-graduation-cap"></i>
+                <h1>ADC Dashboard</h1>
+            </div>
+            <div class="header-right">
+                <button class="btn-export" onclick="exportToExcel()">
+                    <i class="fas fa-file-excel"></i> Export to Excel
+                </button>
+                <button class="btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <nav class="sidebar">
+                <ul>
+                    <li class="active" onclick="showTab('dashboard')">
+                        <i class="fas fa-chart-line"></i> Dashboard
+                    </li>
+                    <li onclick="showTab('users')">
+                        <i class="fas fa-users"></i> Users
+                    </li>
+                    <li onclick="showTab('knowledge')">
+                        <i class="fas fa-book"></i> Knowledge Base
+                    </li>
+                    <li onclick="showTab('ielts')">
+                        <i class="fas fa-graduation-cap"></i> IELTS Regs
+                    </li>
+                    <li onclick="showTab('broadcast')">
+                        <i class="fas fa-bullhorn"></i> Broadcast
+                    </li>
+                </ul>
+            </nav>
+
+            <section class="content">
+                <div id="dashboard-tab" class="tab-content">
+                    <div class="content-header">
+                        <h2>Analytics Dashboard</h2>
+                    </div>
+                    <div style="display: flex; gap: 20px; margin-bottom: 30px;">
+                        <div
+                            style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex: 1; text-align: center;">
+                            <h3 style="margin: 0; color: #666; font-size: 14px; text-transform: uppercase;">Total
+                                Students</h3>
+                            <p id="stat-total-users"
+                                style="font-size: 36px; font-weight: bold; margin: 10px 0 0; color: #1a73e8;">0</p>
+                        </div>
+                        <div
+                            style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex: 1; text-align: center;">
+                            <h3 style="margin: 0; color: #666; font-size: 14px; text-transform: uppercase;">IELTS
+                                Registrations</h3>
+                            <p id="stat-total-ielts"
+                                style="font-size: 36px; font-weight: bold; margin: 10px 0 0; color: #34a853;">0</p>
+                        </div>
+                    </div>
+                    <div
+                        style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <canvas id="courseChart" style="max-height: 400px;"></canvas>
+                    </div>
+                </div>
+
+                <div id="users-tab" class="tab-content" style="display:none">
+                    <div class="content-header">
+                        <h2>Registered Students</h2>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="user-search" placeholder="Search by name or phone..."
+                                onkeyup="filterUsers()">
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="users-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Full Name</th>
+                                    <th>Phone</th>
+                                    <th>Course</th>
+                                    <th>Schedule</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="knowledge-tab" class="tab-content" style="display:none">
+                    <div class="content-header">
+                        <h2>Knowledge Base Management</h2>
+                        <button class="btn-save" onclick="saveKnowledge()">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                    <p class="hint">This text is used by the AI to answer student questions. Edit with care.</p>
+                    <textarea id="knowledge-editor"></textarea>
+                </div>
+                <div id="ielts-tab" class="tab-content" style="display:none">
+                    <div class="content-header">
+                        <h2>IELTS Exam Registrations</h2>
+                    </div>
+                    <div class="table-container">
+                        <table id="ielts-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Full Name</th>
+                                    <th>Phone</th>
+                                    <th>Gmail</th>
+                                    <th>Exam Type</th>
+                                    <th>Passport</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="broadcast-tab" class="tab-content" style="display:none">
+                    <div class="content-header">
+                        <h2>Broadcast Message</h2>
+                        <button class="btn-save" onclick="sendBroadcast()" id="broadcast-btn">
+                            <i class="fas fa-paper-plane"></i> Send to All
+                        </button>
+                    </div>
+                    <p class="hint">Send an announcement to all registered students on Telegram. Supports basic HTML
+                        like &lt;b&gt;bold&lt;/b&gt; or &lt;i&gt;italic&lt;/i&gt;.</p>
+                    <textarea id="broadcast-message" placeholder="Type your announcement here..."></textarea>
+
+                    <div style="margin-top: 15px;">
+                        <label for="broadcast-file"
+                            style="font-weight: 500; color: #444; display: block; margin-bottom: 5px;">Attach File
+                            (Optional, max 50MB):</label>
+                        <input type="file" id="broadcast-file"
+                            style="width: 100%; padding: 10px; border: 1px dashed #ccc; border-radius: 4px;"
+                            accept="image/*,video/*,audio/*,.pdf,.doc,.docx">
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit User</h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="edit-id">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="edit-name">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" id="edit-phone">
+                </div>
+                <div class="form-group">
+                    <label>Course</label>
+                    <input type="text" id="edit-course">
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="edit-status">
+                        <option value="pending">Pending</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="enrolled">Enrolled</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-confirm" onclick="saveUser()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Direct Message Modal -->
+    <div id="dm-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Send Message to Student</h3>
+                <span class="close" onclick="closeDmModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="dm-telegram-id">
+                <p class="hint">This message will be sent directly to the student via the Telegram Bot.</p>
+                <textarea id="dm-message" placeholder="Type your message here..."
+                    style="width: 100%; height: 100px; padding: 10px;"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeDmModal()">Cancel</button>
+                <button class="btn-confirm" onclick="sendDm()">Send Message</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>
