@@ -188,7 +188,7 @@ Modify `utils/systemPrompt.js` to change the bot's personality or rules.
 
 ### Changing AI Model
 In `services/gemini.js`, you can switch between Gemini models:
-- `gemini-1.5-flash` (faster, cost-effective)
+- `gemini-2.5-flash` (latest generation, ultra-fast and high quality)
 - `gemini-1.5-pro` (more capable, higher cost)
 
 ### Language Support
