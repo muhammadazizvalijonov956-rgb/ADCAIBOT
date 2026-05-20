@@ -13,8 +13,8 @@ class GeminiService {
     }
 
     this.genAI = new GoogleGenerativeAI(apiKey);
-    // Using Gemini 2.0 Flash for faster responses
-    this.model = this.genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    // Using Gemini 2.5 Flash for faster responses
+    this.model = this.genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
   }
 
   /**
@@ -72,11 +72,11 @@ ${context}Current user message: ${userMessage}
 
 Please respond as ADC's AI assistant following all the guidelines above.`;
 
-        // Determine which model to use (Fallback to 1.5 on last attempt)
+        // Determine which model to use (Fallback to 2.5 on last attempt)
         let modelToUse = this.model;
         if (attempt === maxRetries) {
-          console.log("🔄 Switching to fallback model (gemini-1.5-flash)...");
-          modelToUse = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+          console.log("🔄 Switching to fallback model (gemini-2.5-flash)...");
+          modelToUse = this.genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
         }
 
         const result = await modelToUse.generateContent(prompt);
